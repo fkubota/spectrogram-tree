@@ -1,5 +1,6 @@
 import sys
 import PyQt5.QtWidgets as QW
+import PyQt5.QtCore as QC
 
 
 class WidgetTree(QW.QWidget):
@@ -20,19 +21,17 @@ class WidgetTree(QW.QWidget):
 
     def init_method(self):
         self.model.setRootPath('')
-        # self.model.setRootPath(QW.QDir.rootPath())
         self.tree.setModel(self.model)
+        self.tree.setRootIndex(self.model.index(QC.QDir.homePath()))
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
-        self.tree.setModel(self.model)
 
 
 def main():
     app = QW.QApplication(sys.argv)
 
     w = WidgetTree()
-    w.tree.setRootIndex(w.model.index("../data/"))
     w.move(600, 500)
     w.show()
 
