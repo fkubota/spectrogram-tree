@@ -9,6 +9,9 @@ class WidgetTree(QW.QWidget):
         self.model = QW.QFileSystemModel()
         self.tree = QW.QTreeView()
 
+        self.init_ui()
+        self.init_method()
+
     def init_ui(self):
         self.tree.resize(640, 480)
         vhox0 = QW.QVBoxLayout()
@@ -16,11 +19,13 @@ class WidgetTree(QW.QWidget):
         self.setLayout(vhox0)
 
     def init_method(self):
-        self.model.setRootPath('/')
+        self.model.setRootPath('')
+        # self.model.setRootPath(QW.QDir.rootPath())
         self.tree.setModel(self.model)
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
+        self.tree.setModel(self.model)
 
 
 def main():
