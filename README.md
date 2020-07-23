@@ -13,5 +13,11 @@ signalとスペクトログラムを並べつつ、音も再生できます。
 
 ## Installation(linux)
 - 1分で使いたい人向け
+    - 実行ファイルがビルドされているのでそれを動かすだけです
+    - 手順
+        1. リポジトリをクローンする
+        1. `chmod u+x spectrogram-tree/app/dist/spectrogram-tree/spectrogram-tree`  <--- 実行権限付与
+        1. `./spectrogram-tree/app/dist/spectrogram-tree/spectrogram-tree`  <--- 実行
 
 - developer 向けの説明
+	- 今度書く
