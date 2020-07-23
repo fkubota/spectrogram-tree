@@ -16,7 +16,6 @@ class WidgetTree(QW.QWidget):
 
     def init_ui(self):
         self.tree.sortByColumn(0, QC.Qt.AscendingOrder)
-        self.tree.setColumnWidth(0, 300)
 
         # layout
         self.tree.resize(640, 480)
@@ -31,6 +30,7 @@ class WidgetTree(QW.QWidget):
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
+        self.tree.setColumnWidth(0, 300)
 
     def init_event(self):
         pass
