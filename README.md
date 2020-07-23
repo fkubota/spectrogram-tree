@@ -5,7 +5,7 @@
 ディレクトリツリーのアイテムをダブルクリックするだけでスペクトログラムが見れます。
 signalとスペクトログラムを並べつつ、音も再生できます。
 
-![Not Found](https://raw.github.com/wiki/fkubota/spectrogram-tree/gif/spectrogram-tree.gif)
+![Not Found](https://raw.github.com/wiki/fkubota/spectrogram-tree/images/spectrogram-tree.gif)
 
 
 ## 使い方
