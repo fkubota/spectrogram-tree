@@ -15,6 +15,10 @@ class WidgetTree(QW.QWidget):
         self.init_event()
 
     def init_ui(self):
+        self.tree.sortByColumn(0, QC.Qt.AscendingOrder)
+        self.tree.setColumnWidth(0, 300)
+
+        # layout
         self.tree.resize(640, 480)
         vhox0 = QW.QVBoxLayout()
         vhox0.addWidget(self.tree)
@@ -27,15 +31,9 @@ class WidgetTree(QW.QWidget):
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
-        self.tree.sortByColumn(0, QC.Qt.AscendingOrder)
 
     def init_event(self):
-        # self.tree.doubleClicked.connect(self.item_double_clicked)
         pass
-
-    # def item_double_clicked(self, index):
-    #     path = index.model().filePath(index)
-    #     print(path)
 
 
 def main():
