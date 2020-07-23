@@ -22,6 +22,7 @@ class WidgetPlot(QW.QWidget):
         self.plot_signal = self.p_signal.plot(pen=('#0F8EBB50'))
 
         self.p_spec = self.w_spec.addPlot()
+        self.img = pg.ImageItem()
         self.hist = pg.HistogramLUTItem()
 
         self.init_ui()
@@ -36,16 +37,15 @@ class WidgetPlot(QW.QWidget):
         self.p_signal.addItem(self.plot_signal)
 
         # spectrogram
-        self.img = pg.ImageItem()
         self.p_spec.addItem(self.img)
         self.hist.setImageItem(self.img)
-        # self.p_spec.addItem(self.hist)
+        self.p_spec.addItem(self.hist)
         self.hist.gradient.restoreState(
             {'mode': 'rgb',
              'ticks': [(0.5, (0, 182, 188, 255)),
                        (1.0, (246, 111, 0, 255)),
                        (0.0, (75, 0, 113, 255))]})
-        # self.w_spec.addItem(self.hist)
+        self.w_spec.addItem(self.hist)
 
         self.p_spec.setLabel('bottom', "Time", units='s')
         self.p_spec.setLabel('left', "Frequency", units='Hz')
@@ -61,34 +61,36 @@ class WidgetPlot(QW.QWidget):
 
     def get_spectrogram(self, signal, sr):
         n_fft = 512
-        hop_length = 256
-        # f, t, spec = sp.signal.spectrogram(signal, sr, nfft=n_fft)
-        # spec = spec/spec.mean()
-        # spec = librosa.amplitude_to_db(spec)
+        hop_length = int(n_fft/2)
 
-        spec = np.abs(librosa.stft(signal, n_fft=n_fft, hop_length=hop_length))
+        f, t, spec = sp.signal.spectrogram(signal, sr, nperseg=n_fft, noverlap=hop_length)
+        spec = (spec/spec.mean())
+        # print(spec.shape)
+
+        # spec = np.abs(librosa.stft(signal, n_fft=n_fft, hop_length=hop_length))
+        # print(spec.shape)
+        # t = len(signal) / sr
+        # f = int(sr)/2
+
         spec = librosa.amplitude_to_db(spec)
-        t = len(signal) / sr
-        f = int(sr)/2
         return f, t, spec
 
     def update_plot(self):
         x = self.x[::100]
         y = self.y[::100]
         self.plot_signal.setData(x, y)
-        self.p_signal.setXRange(x[0], x[-1], padding=0)
 
     def update_spectrogram(self):
         f, t, spec = self.get_spectrogram(self.y, self.sr)
-
-        self.img = pg.ImageItem()
-        self.p_spec.addItem(self.img)
-        self.hist.setImageItem(self.img)
-
-        self.img.scale(t/spec.shape[1], f/spec.shape[0])
         self.img.setImage(spec)
-        self.p_spec.setXRange(0, t, padding=0)
-        self.p_spec.setYRange(0, f, padding=0)
+
+        self.img.scale(
+                t[-1]/np.size(spec, axis=1), f[-1]/np.size(spec, axis=0))
+        self.p_spec.setLimits(xMin=0, xMax=t[-1], yMin=0, yMax=f[-1])
+
+        # self.img.scale(
+        #         t/np.size(spec, axis=1), f/np.size(spec, axis=0))
+        # self.p_spec.setLimits(xMin=0, xMax=t, yMin=0, yMax=f)
 
     def set_signal(self, signal, sr):
         self.sr = sr
@@ -103,8 +105,7 @@ class WidgetPlot(QW.QWidget):
 def main():
     app = QW.QApplication(sys.argv)
 
-    # filename = librosa.util.example_audio_file()
-    filename = '../data/sample/dir00/cartoon-birds-2_daniel-simion.mp3'
+    filename = librosa.util.example_audio_file()
     data, sr = librosa.load(filename, sr=None)
     w = WidgetPlot()
     w.set_signal(data, sr)

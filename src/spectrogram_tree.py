@@ -75,6 +75,7 @@ def main():
     w = SpectrogramTree()
 
     filename = librosa.util.example_audio_file()
+    # filename = '../data/sample/dir00/cartoon-birds-2_daniel-simion.mp3'
     data, sr = librosa.load(filename, sr=None)
     w.w_plot.set_signal(data, sr)
     w.w_mp.set_contents(filename)
