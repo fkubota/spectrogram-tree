@@ -12,6 +12,7 @@ class WidgetTree(QW.QWidget):
 
         self.init_ui()
         self.init_method()
+        self.init_event()
 
     def init_ui(self):
         self.tree.resize(640, 480)
@@ -26,6 +27,15 @@ class WidgetTree(QW.QWidget):
         self.tree.setAnimated(False)
         self.tree.setIndentation(20)
         self.tree.setSortingEnabled(True)
+        self.tree.sortByColumn(0, QC.Qt.AscendingOrder)
+
+    def init_event(self):
+        # self.tree.doubleClicked.connect(self.item_double_clicked)
+        pass
+
+    # def item_double_clicked(self, index):
+    #     path = index.model().filePath(index)
+    #     print(path)
 
 
 def main():
@@ -33,6 +43,7 @@ def main():
 
     w = WidgetTree()
     w.move(600, 500)
+    w.resize(500, 500)
     w.show()
 
     sys.exit(app.exec_())

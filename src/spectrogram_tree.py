@@ -35,6 +35,7 @@ class SpectrogramTree(WidgetMain):
         self.w_mp.player.positionChanged.connect(self.player_position_changed)
         self.bar_0.sigPositionChanged.connect(self.update_bar_pos)
         self.bar_1.sigPositionChanged.connect(self.update_bar_pos)
+        self.w_tree.tree.doubleClicked.connect(self.item_double_cliced)
 
     def player_position_changed(self, pos, senderType=False):
         '''
@@ -56,6 +57,16 @@ class SpectrogramTree(WidgetMain):
         if self.w_mp.player.state() != QM.QMediaPlayer.PlayingState:
             # musicplayerの再生位置の調整
             self.w_mp.player.setPosition(pos*1000)  # ms 単位で渡す
+
+    def item_double_cliced(self, index):
+        '''
+        music player に音声データをセット。
+        グラフを更新。
+        '''
+        path = index.model().filePath(index)
+        data, sr = librosa.load(path, sr=None)
+        self.w_plot.set_signal(data, sr)
+        self.w_mp.set_contents(path)
 
 
 def main():
