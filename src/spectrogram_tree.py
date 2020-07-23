@@ -36,6 +36,10 @@ class SpectrogramTree(WidgetMain):
         self.bar_0.sigPositionChanged.connect(self.update_bar_pos)
         self.bar_1.sigPositionChanged.connect(self.update_bar_pos)
         self.w_tree.tree.doubleClicked.connect(self.item_double_cliced)
+        self.w_plot.p_signal.scene().sigMouseClicked.connect(
+                                        self.clicked_window)
+        self.w_plot.p_spec.scene().sigMouseClicked.connect(
+                                        self.clicked_window)
 
     def player_position_changed(self, pos, senderType=False):
         '''
@@ -67,6 +71,13 @@ class SpectrogramTree(WidgetMain):
         data, sr = librosa.load(path, sr=None)
         self.w_plot.set_signal(data, sr)
         self.w_mp.set_contents(path)
+
+    def clicked_window(self, event):
+        self.w_mp.pause_handler()
+        pos = event.scenePos()
+        mousePoint = self.w_plot.p_signal.vb.mapSceneToView(pos)
+        self.bar_0.setPos(mousePoint.x())
+        self.w_mp.play_handler()
 
 
 def main():
