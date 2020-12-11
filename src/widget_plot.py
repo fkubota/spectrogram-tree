@@ -1,6 +1,6 @@
 import sys
+import scipy.signal as ss
 import numpy as np
-import librosa
 import PyQt5.QtWidgets as QW
 import pyqtgraph as pg
 
@@ -59,14 +59,9 @@ class WidgetPlot(QW.QWidget):
         pass
 
     def get_spectrogram(self, signal, sr):
-        n_fft = 512
-        hop_length = 256
-        # f, t, spec = sp.signal.spectrogram(signal, sr, nfft=n_fft)
-        # spec = spec/spec.mean()
-        # spec = librosa.amplitude_to_db(spec)
+        f, t, Zxx = ss.stft(signal, sr, nperseg=512)
 
-        spec = np.abs(librosa.stft(signal, n_fft=n_fft, hop_length=hop_length))
-        spec = librosa.amplitude_to_db(spec)
+        spec = self.amplitude_to_db(Zxx)
         t = len(signal) / sr
         f = int(sr)/2
         return f, t, spec
@@ -98,15 +93,35 @@ class WidgetPlot(QW.QWidget):
         self.update_plot()
         self.update_spectrogram()
 
+    def amplitude_to_db(self, S, ref=1.0, amin=1e-5, top_db=80.0):
+        magnitude = np.abs(S)
+        power = np.square(magnitude, out=magnitude)
+        ref_value = np.abs(ref)
+
+        return self.power_to_db(
+                power, ref=ref_value**2, amin=amin**2, top_db=top_db)
+
+    def power_to_db(self, S, ref=1.0, amin=1e-10, top_db=80.0):
+        S = np.asarray(S)
+        magnitude = np.abs(S)
+        ref_value = np.abs(ref)
+
+        log_spec = 10.0 * np.log10(np.maximum(amin, magnitude))
+        log_spec -= 10.0 * np.log10(np.maximum(amin, ref_value))
+
+        if top_db is not None:
+            log_spec = np.maximum(log_spec, log_spec.max() - top_db)
+
+        return log_spec
+
 
 def main():
     app = QW.QApplication(sys.argv)
 
-    # filename = librosa.util.example_audio_file()
-    filename = '../data/sample/dir00/cartoon-birds-2_daniel-simion.mp3'
-    data, sr = librosa.load(filename, sr=None)
+    # filename = '../data/sample/dir00/cartoon-birds-2_daniel-simion.mp3'
     w = WidgetPlot()
-    w.set_signal(data, sr)
+    # w.set_signal(data, sr)
+    w.move(200, 200)
 
     w.show()
     sys.exit(app.exec_())

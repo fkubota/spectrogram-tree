@@ -1,5 +1,6 @@
 import sys
-import librosa
+import pydub
+import numpy as np
 import PyQt5.QtWidgets as QW
 import PyQt5.QtMultimedia as QM
 import pyqtgraph as pg
@@ -68,7 +69,14 @@ class SpectrogramTree(WidgetMain):
         グラフを更新。
         '''
         path = index.model().filePath(index)
-        data, sr = librosa.load(path, sr=None)
+        ext = path.split('.')[1]
+        if ext == 'wav':
+            a = pydub.AudioSegment.from_wav(path)
+        elif ext == 'mp3':
+            a = pydub.AudioSegment.from_mp3(path)
+        sr = a.frame_rate
+        data = np.array(a.get_array_of_samples()[::a.channels])
+        # data = data if data.ndim == 1 else data.mean(axis=1)
         self.w_plot.set_signal(data, sr)
         self.w_mp.set_contents(path)
 
@@ -84,10 +92,8 @@ def main():
     app = QW.QApplication(sys.argv)
 
     w = SpectrogramTree()
+    w.move(300, 300)
 
-    # filename = librosa.util.example_audio_file()
-    # filename = '../data/sample/dir00/cartoon-birds-2_daniel-simion.mp3'
-    # data, sr = librosa.load(filename, sr=None)
     # w.w_plot.set_signal(data, sr)
     # w.w_mp.set_contents(filename)
 

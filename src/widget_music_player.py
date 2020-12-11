@@ -1,5 +1,4 @@
 import sys
-import librosa
 import PyQt5.QtWidgets as QW
 import PyQt5.QtMultimedia as QM
 import PyQt5.QtCore as QC
@@ -51,11 +50,10 @@ class WidgetMusicPlayer(QW.QWidget):
 def main():
     app = QW.QApplication(sys.argv)
 
-    file_path = librosa.util.example_audio_file()
 
     w = WidgetMusicPlayer()
     w.move(600, 500)
-    w.set_contents(file_path)
+    # w.set_contents(file_path)
     w.show()
 
     sys.exit(app.exec_())

@@ -1,5 +1,4 @@
 import sys
-import librosa
 import PyQt5.QtWidgets as QW
 from widget_tree import WidgetTree
 from widget_plot import WidgetPlot
@@ -42,12 +41,11 @@ class WidgetMain(QW.QMainWindow):
 def main():
     app = QW.QApplication(sys.argv)
 
-    file_path = librosa.util.example_audio_file()
-    signal, sr = librosa.load(file_path, sr=None)
+    # sr, data = wavfile.read(path)
 
     w = WidgetMain()
     w.w_tree.tree.setRootIndex(w.w_tree.model.index('../data/'))
-    w.w_plot.set_signal(signal, sr)
+    # w.w_plot.set_signal(signal, sr)
 
     w.show()
 
