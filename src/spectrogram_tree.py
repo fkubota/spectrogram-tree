@@ -1,4 +1,4 @@
-import sys
+﻿import sys
 import pydub
 import numpy as np
 import PyQt5.QtWidgets as QW
@@ -69,13 +69,19 @@ class SpectrogramTree(WidgetMain):
         グラフを更新。
         '''
         path = index.model().filePath(index)
-        ext = path.split('.')[1]
-        if ext == 'wav':
-            a = pydub.AudioSegment.from_wav(path)
-        elif ext == 'mp3':
-            a = pydub.AudioSegment.from_mp3(path)
-        sr = a.frame_rate
-        data = np.array(a.get_array_of_samples()[::a.channels])
+
+        import librosa
+        data, sr = librosa.load(path, sr=None)
+
+        #if '.wav' in path:
+        #    print(path)
+        #    a = pydub.AudioSegment.from_wav(path)
+        #elif '.mp3' in path:
+        #    print(path)
+        #    a = pydub.AudioSegment.from_mp3(path)
+        #sr = a.frame_rate
+        #data = np.array(a.get_array_of_samples()[::a.channels])
+        #data = data/data.max()
         # data = data if data.ndim == 1 else data.mean(axis=1)
         self.w_plot.set_signal(data, sr)
         self.w_mp.set_contents(path)
