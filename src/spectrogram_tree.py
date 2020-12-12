@@ -70,19 +70,18 @@ class SpectrogramTree(WidgetMain):
         '''
         path = index.model().filePath(index)
 
-        import librosa
-        data, sr = librosa.load(path, sr=None)
+        # import librosa
+        # data, sr = librosa.load(path, sr=None)
 
-        #if '.wav' in path:
-        #    print(path)
-        #    a = pydub.AudioSegment.from_wav(path)
-        #elif '.mp3' in path:
-        #    print(path)
-        #    a = pydub.AudioSegment.from_mp3(path)
-        #sr = a.frame_rate
-        #data = np.array(a.get_array_of_samples()[::a.channels])
-        #data = data/data.max()
-        # data = data if data.ndim == 1 else data.mean(axis=1)
+        # if '.wav' in path:
+        # elif '.mp3' in path:
+        #     a = pydub.AudioSegment.from_mp3(path)
+        ext = path.split('.')[-1]
+        a = pydub.AudioSegment.from_file(path, format=ext)
+        sr = a.frame_rate
+        data = np.array(a.get_array_of_samples()[::a.channels])
+        data = data/data.max()
+        data = data if data.ndim == 1 else data.mean(axis=1)
         self.w_plot.set_signal(data, sr)
         self.w_mp.set_contents(path)
 
