@@ -3,7 +3,7 @@ numpy==1.19.0
 PyQt5==5.15.0
 PyQt5-sip==12.8.0
 pyqtgraph==0.11.0
-scipy==1.5.1
+scipy==1.10.0
 numba==0.48.0
 pyinstaller==3.6
 pydub==0.24.1
